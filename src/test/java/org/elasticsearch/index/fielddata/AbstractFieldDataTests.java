@@ -91,7 +91,7 @@ public abstract class AbstractFieldDataTests extends ElasticsearchTestCase {
                 ImmutableSettings.Builder.EMPTY_SETTINGS,
                 new IndicesFieldDataCacheListener(circuitBreakerService)
         );
-        ifdService = new IndexFieldDataService(new Index("test"), circuitBreakerService, indicesFieldDataCache);
+        ifdService = new IndexFieldDataService(new Index("test"), ImmutableSettings.builder().put("index.fielddata.cache", "none").build(), indicesFieldDataCache, circuitBreakerService, new IndicesFieldDataCacheListener(circuitBreakerService));
         MapperService mapperService = MapperTestUtils.newMapperService(ifdService.index(), ImmutableSettings.Builder.EMPTY_SETTINGS);
         ifdService.setIndexService(new StubIndexService(mapperService));
         // LogByteSizeMP to preserve doc ID order
