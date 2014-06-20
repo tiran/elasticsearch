@@ -27,7 +27,7 @@ import org.elasticsearch.index.fielddata.IndexFieldDataCache;
 import org.elasticsearch.index.fielddata.plain.PagedBytesIndexFieldData;
 import org.elasticsearch.index.mapper.FieldMapper;
 import org.elasticsearch.indices.fielddata.breaker.CircuitBreakerService;
-import org.elasticsearch.indices.fielddata.breaker.DummyCircuitBreakerService;
+import org.elasticsearch.indices.fielddata.breaker.NoneCircuitBreakerService;
 import org.elasticsearch.indices.fielddata.cache.IndicesFieldDataCacheListener;
 import org.elasticsearch.test.index.service.StubIndexService;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class FieldDataBaseBogusReadersCache extends BaseBogusReadersCache {
     public void testFieldDataCache() throws Exception {
         Index index = new Index("test");
         StubIndexService indexService = new StubIndexService(null);
-        CircuitBreakerService breakerService = new DummyCircuitBreakerService();
+        CircuitBreakerService breakerService = new NoneCircuitBreakerService();
         IndicesFieldDataCacheListener listener = new IndicesFieldDataCacheListener(breakerService);
         IndexFieldDataCache.FieldBased.Resident resident = new IndexFieldDataCache.Resident(logger, indexService, null, null, listener);
         FieldDataType type = new FieldDataType("type");

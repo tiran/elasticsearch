@@ -28,7 +28,7 @@ import org.elasticsearch.index.Index;
 import org.elasticsearch.index.mapper.*;
 import org.elasticsearch.index.mapper.Mapper.BuilderContext;
 import org.elasticsearch.indices.fielddata.breaker.CircuitBreakerService;
-import org.elasticsearch.indices.fielddata.breaker.DummyCircuitBreakerService;
+import org.elasticsearch.indices.fielddata.breaker.NoneCircuitBreakerService;
 import org.elasticsearch.indices.fielddata.cache.IndicesFieldDataCache;
 import org.elasticsearch.indices.fielddata.cache.IndicesFieldDataCacheListener;
 import org.elasticsearch.test.ElasticsearchTestCase;
@@ -86,7 +86,7 @@ public abstract class AbstractFieldDataTests extends ElasticsearchTestCase {
 
     @Before
     public void setup() throws Exception {
-        CircuitBreakerService circuitBreakerService = new DummyCircuitBreakerService();
+        CircuitBreakerService circuitBreakerService = new NoneCircuitBreakerService();
         indicesFieldDataCache = new IndicesFieldDataCache(
                 ImmutableSettings.Builder.EMPTY_SETTINGS,
                 new IndicesFieldDataCacheListener(circuitBreakerService)
