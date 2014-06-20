@@ -21,7 +21,6 @@ package org.elasticsearch.index.fielddata;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import org.apache.lucene.index.IndexReader;
 import org.elasticsearch.ElasticsearchIllegalArgumentException;
 import org.elasticsearch.common.collect.MapBuilder;
 import org.elasticsearch.common.collect.Tuple;
@@ -187,17 +186,6 @@ public class IndexFieldDataService extends AbstractIndexComponent {
         }
     }
 
-    public void clear(IndexReader reader) {
-        synchronized (loadedFieldData) {
-            for (IndexFieldData<?> indexFieldData : loadedFieldData.values()) {
-                indexFieldData.clear(reader);
-            }
-            for (IndexFieldDataCache cache : fieldDataCaches.values()) {
-                cache.clear(reader);
-            }
-        }
-    }
-
     public void onMappingUpdate() {
         // synchronize to make sure to not miss field data instances that are being loaded
         synchronized (loadedFieldData) {
@@ -251,6 +239,8 @@ public class IndexFieldDataService extends AbstractIndexComponent {
                             cache = new IndexFieldDataCache.Soft(logger, indexService, fieldNames, type, indicesFieldDataCacheListener);
                         } else if ("node".equals(cacheType)) {
                             cache = indicesFieldDataCache.buildIndexFieldDataCache(indexService, index, fieldNames, type);
+                        } else if ("none".equals(cacheType)){
+                            cache = new IndexFieldDataCache.None();
                         } else {
                             throw new ElasticsearchIllegalArgumentException("cache type not supported [" + cacheType + "] for field [" + fieldNames.fullName() + "]");
                         }
